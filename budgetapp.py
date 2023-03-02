@@ -11,7 +11,7 @@ class Category:
         self.ledger.append({"amount": amount, "description": description})
 
     # withdraws amount and also adds description to ledger list
-    def withdraw(self, amount, description):
+    def withdraw(self, amount, description =''):
         if self.checkfunds(amount) == True:
             self.ledger.append({"amount": -amount, "description": description})
             return True
@@ -44,20 +44,65 @@ class Category:
         else:
             return True
 
+    def title_maker(self):
+        x = ""
+        firstpart_len = int((30 - len(self.name)) / 2)
+        for i in range(firstpart_len):
+            x += "*"
+        x += self.name
+        remaining_len = 30 - firstpart_len - len(self.name)
+        for i in range(remaining_len):
+            x += "*"
+        title = x
+        return title
 
-food = Category("food")
+    def line_maker(self):
+        lines = ""
 
-food.deposit(2500)
-# print(food.get_balance())
-(food.withdraw(20, "pizza"))
-print(food.withdraw(2000, "sushi"))
-# print(food.withdraw(2050, "cookies"))
+        for item in self.ledger:
 
-clothes = Category("clothes")
+            description = item["description"]
+            amount = item["amount"]
+            amount = "{0:.2f}".format(amount)[:7]
+            # amount = float(amount)
+            # amount = round(amount, 2)
+            description = description[:23]
 
-(food.transfer(200, clothes))
-# print(clothes.ledger)
-print(clothes.ledger)
+            description_len = len(description)
+            amount_len = len(str(amount))
+
+            space_len = 30 - description_len - amount_len
+            lines += description
+            for i in range(space_len):
+                lines += " "
+            lines += str(amount)
+            lines += "\n"
+        balance = self.get_balance()
+        balance = "{0:.2f}".format(balance)
+        lines += "Total: " + str(balance)
+
+        return lines
+
+    def __str__(self):
+        title = self.title_maker()
+        lines = self.line_maker()
+        print_output = title + "\n" + lines
+        return print_output
+
+#food = Category("food")
+#
+#
+#food.deposit(2500)
+## print(food.get_balance())
+#(food.withdraw(21, "pizza"))
+#print(food.withdraw(2000, "sushi"))
+## print(food.withdraw(2050, "cookies"))
+#print(food)
+#clothes = Category("clothes")
+#
+#(food.transfer(200, clothes))
+## print(clothes.ledger)
+#print(clothes.ledger)
 
 
-# def create_spend_chart(categories):
+def create_spend_chart(categories):
